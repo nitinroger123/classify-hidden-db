@@ -64,6 +64,11 @@ public class QueryHelper {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param fileName
+	 * @param queriesForClassification
+	 */
 	private static void printQueriesForClassification(String fileName, Map<String, List<String>> queriesForClassification){
 		System.out.println("---printQueriesForClassification Start-----------------");
 		System.out.println("from file=" + fileName);

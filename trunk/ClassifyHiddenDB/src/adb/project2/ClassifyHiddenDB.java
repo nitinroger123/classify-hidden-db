@@ -1,6 +1,5 @@
 package adb.project2;
 
-import java.awt.image.SampleModel;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,6 +17,7 @@ public class ClassifyHiddenDB {
 	private Double t_specificity = null;
 	private Long t_coverage = null;
 	private String bingAppId = null;
+	private List<String> classificationsForDB = null;
 	
 	/**
 	 * Entry point for our program.
@@ -26,14 +26,14 @@ public class ClassifyHiddenDB {
 	public static void main(String[] args) {
 		System.out.println("main");
 		String bingAppID = "E69E241D81BD12B3CAB2FAC07061D2DA6C00117E";
-		Double specificity = 0.3;
+		Double specificity = 0.003;
 		Long coverage = (long)100;
-		String database = "java.sun.com";
+		String database = "nba.com";
 		
 		ClassifyHiddenDB classifyHiddenDB = new ClassifyHiddenDB(bingAppID, specificity, coverage, database);
 		try {
-			Map<String, List<String>> queriesForClassification = QueryHelper.getQueriesForClassification("Root.txt", "Root");
-			classifyHiddenDB.classifyDB("root", queriesForClassification);
+			Map<String, List<String>> queriesForClassification = QueryHelper.getQueriesForClassification("ROOT.txt", "Root");
+			classifyHiddenDB.classifyDB("ROOT", queriesForClassification);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (JSONException e) {
@@ -42,6 +42,7 @@ public class ClassifyHiddenDB {
 		
 //		Classification.printClassifications(" -FINAL- ");
 		
+		printClassificationForDB(classifyHiddenDB);
 		
 	}
 	
@@ -51,10 +52,12 @@ public class ClassifyHiddenDB {
 		this.bingAppId = bingAppID;
 		this.t_specificity = new Double(tSpec);
 		this.t_coverage = new Long(tCover);
+		this.classificationsForDB = new ArrayList<String>();
 	}
 
 	
 	private void classifyDB(String currentType, Map<String, List<String>> queriesForClassification) throws JSONException, IOException{
+		Classification.clearObjectMap();
 		
 		for(String classificationType : queriesForClassification.keySet()){
 			List<String> queries = queriesForClassification.get(classificationType);
@@ -83,10 +86,22 @@ public class ClassifyHiddenDB {
 		if(qualifyingClassifications == null || qualifyingClassifications.size() <= 0){
 			System.out.println(" Couldnt classify the DB More.");
 			System.out.println(" Current level of classification is " + currentType);
+			this.classificationsForDB.add(currentType);
 		} else {
 			System.out.println(" Going deeper to the next level of classification ");
 			for(String s : qualifyingClassifications){
 				System.out.println(" DB Classified as --> " + s);
+				String nextLevel = s.substring(s.lastIndexOf(':') + 1);
+				try {
+					Map<String, List<String>> queriesForClassificationFurther = QueryHelper.getQueriesForClassification(nextLevel+".txt", s);
+					this.classifyDB(s, queriesForClassificationFurther);
+				} catch (IOException e) {
+//					e.printStackTrace();
+					this.classificationsForDB.add(s);
+					continue;
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	
@@ -98,6 +113,15 @@ public class ClassifyHiddenDB {
 		String requestURL = BingSearch.getRequestString(query, appID);
 		JSONObject result = BingSearch.getSearchResults(requestURL);
 		return result;
+	}
+	
+	
+	public static void printClassificationForDB(ClassifyHiddenDB classifyHiddenDB){
+		System.out.println("---------DATABASE CALSSIFIED AS FOLLOWS---------");
+		for(String s : classifyHiddenDB.classificationsForDB){
+			System.out.println("-> " + s);
+		}
+		System.out.println("---------END DATABASE CALSSIFIED AS FOLLOWS---------");
 	}
 	
 	/**
