@@ -19,9 +19,10 @@ public class QueryHelper {
 	 * @param filename
 	 * @throws IOException 
 	 */
-	public static Map<String, List<String>> getQueriesForClassification(String fileName) throws IOException{
+	public static Map<String, List<String>> getQueriesForClassification(String fileName, String parentType) throws IOException{
 		Map<String, List<String>> queriesForClassification = new HashMap<String, List<String>>();
 		
+		parentType = parentType.toUpperCase();
 		BufferedReader br = new BufferedReader(
 				new InputStreamReader(new BufferedInputStream(
 						new FileInputStream(new File(fileName)))));
@@ -31,7 +32,7 @@ public class QueryHelper {
 			if (tmpLineStr == null || tmpLineStr.isEmpty()) {
 				break;
 			}
-			getQueryFromLine(queriesForClassification, tmpLineStr);
+			getQueryFromLine(parentType, queriesForClassification, tmpLineStr);
 		}
 		br.close();
 		
@@ -44,7 +45,7 @@ public class QueryHelper {
 	 * @param queriesForClassification
 	 * @param tmpLineStr
 	 */
-	private static void getQueryFromLine(Map<String, List<String>> queriesForClassification, String tmpLineStr){
+	private static void getQueryFromLine(String parentType, Map<String, List<String>> queriesForClassification, String tmpLineStr){
 		int spaceIndex = tmpLineStr.indexOf(' ');
 		String dbType, query;
 		if(spaceIndex==-1){
@@ -52,6 +53,7 @@ public class QueryHelper {
 			System.exit(0);
 		}
 		dbType = tmpLineStr.substring(0, spaceIndex).trim().toUpperCase();
+		dbType = parentType+":"+dbType;
 		query = tmpLineStr.substring(spaceIndex+1).trim().toLowerCase();
 		
 		if(queriesForClassification.containsKey(dbType)){
