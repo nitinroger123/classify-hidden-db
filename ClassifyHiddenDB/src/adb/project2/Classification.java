@@ -56,12 +56,12 @@ public class Classification {
 	 * calculates specificity for all Classifications
 	 */
 	public static void calculateSpecificity(){
-		long totalDocs = getTotalDocs();
+		Long totalDocs = getTotalDocs();
 		Classification refClass = null;
 		for(String refClassType : OBJECT_MAP.keySet()){
 			refClass = OBJECT_MAP.get(refClassType);;
-			double a = refClass.getCoverage()/totalDocs;
-			System.out.println("for refClass=" + refClassType + "--" + refClass.getCoverage() + ", " + totalDocs + ", " + a);
+			double a = refClass.getCoverage().doubleValue()/totalDocs.doubleValue();
+			System.out.println("for refClass=" + refClassType + "--" + refClass.getCoverage() + ", " + totalDocs + ", " + a + ",, " +  refClass.getCoverage()/totalDocs);
 			refClass.setSpecificity(a);
 		}
 	}
@@ -70,8 +70,8 @@ public class Classification {
 	 * returns the total number of docs returned by BING for the given queries.
 	 * @return
 	 */
-	public static long getTotalDocs(){
-		long totalDocs = 0;
+	public static Long getTotalDocs(){
+		Long totalDocs = new Long(0);
 		for(String s : OBJECT_MAP.keySet()){
 			totalDocs += OBJECT_MAP.get(s).getCoverage();
 		}
@@ -113,5 +113,12 @@ public class Classification {
 			System.out.print(someStrToIdentify + " : ");
 			System.out.println(OBJECT_MAP.get(s));
 		}
+	}
+	
+	/**
+	 * clears the object Map.
+	 */
+	public static void clearObjectMap(){
+		OBJECT_MAP = new HashMap<String, Classification>();
 	}
 }
