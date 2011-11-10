@@ -30,7 +30,7 @@ public class BingSearch {
 		query = query.replaceAll(" ", "%20");
 		String requestString = "http://api.search.live.net/json.aspx?" + "Appid=" + appID + "&query="+query 
 						+ "&sources=" + sources + "&web.count=" + webCount;
-		System.out.println("Request URL : "+requestString);
+//		System.out.println("Request URL : "+requestString);
 		return requestString;
 	}
 	

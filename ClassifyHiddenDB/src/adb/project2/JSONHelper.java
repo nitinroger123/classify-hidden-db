@@ -22,7 +22,6 @@ public class JSONHelper {
 	}
 	
 	public static Long getTotalFromSearch(JSONObject search) throws JSONException {
-		String total = search.getJSONObject("SearchResponse").getJSONObject("Web").get("Total").toString();
-		return Long.parseLong(total);
+		 return search.getJSONObject("SearchResponse").getJSONObject("Web").getLong("Total");
 	}
 }

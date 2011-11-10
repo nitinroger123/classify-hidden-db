@@ -61,7 +61,7 @@ public class Classification {
 		for(String refClassType : OBJECT_MAP.keySet()){
 			refClass = OBJECT_MAP.get(refClassType);;
 			double a = refClass.getCoverage().doubleValue()/totalDocs.doubleValue();
-			System.out.println("for refClass=" + refClassType + "--" + refClass.getCoverage() + ", " + totalDocs + ", " + a + ",, " +  refClass.getCoverage()/totalDocs);
+//			System.out.println("for refClass=" + refClassType + "--" + refClass.getCoverage() + ", " + totalDocs + ", " + a + ",, " +  refClass.getCoverage()/totalDocs);
 			refClass.setSpecificity(a);
 		}
 	}
@@ -102,6 +102,17 @@ public class Classification {
 	public String toString() {
 		return "[Classification] classificatonType=" + getClassificatonType() 
 				+ ", coverage=" + getCoverage() + ", specificity=" + getSpecificity();
+	}
+	
+	/**
+	 * prints all available classifications. Used for Debugging.
+	 * @param someStrToIdentify
+	 */
+	public static void printClassifications(){
+		for(String s : OBJECT_MAP.keySet()){
+			System.out.println("Specification for Category: " + OBJECT_MAP.get(s).classificatonType + " is " + OBJECT_MAP.get(s).getSpecificity());
+			System.out.println("Coverage for Category: " + OBJECT_MAP.get(s).classificatonType + " is " + OBJECT_MAP.get(s).getCoverage());
+		}
 	}
 	
 	/**
