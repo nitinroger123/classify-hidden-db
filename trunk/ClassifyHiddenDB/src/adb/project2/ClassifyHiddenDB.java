@@ -24,12 +24,13 @@ public class ClassifyHiddenDB {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		System.out.println("main");
 		String bingAppID = "E69E241D81BD12B3CAB2FAC07061D2DA6C00117E";
-		Double specificity = 0.003;
+		Double specificity = 0.6;
 		Long coverage = (long)100;
-		String database = "nba.com";
+		String database = "hardwarecentral.com";
 		
+		System.out.println("Classifying Database: " + database);
+		System.out.println();
 		ClassifyHiddenDB classifyHiddenDB = new ClassifyHiddenDB(bingAppID, specificity, coverage, database);
 		try {
 			Map<String, List<String>> queriesForClassification = QueryHelper.getQueriesForClassification("ROOT.txt", "Root");
@@ -66,9 +67,9 @@ public class ClassifyHiddenDB {
 			JSONObject resultObj = null;
 			Classification classification = Classification.getByType(classificationType);
 			for(String q : queries){
-				System.out.println(" \t -" + q);
+//				System.out.println(" \t -" + q);
 				resultObj = runSearch(bingAppId, q);
-				System.out.println(classificationType + " : " + q + " :: total=" + JSONHelper.getTotalFromSearch(resultObj));
+//				System.out.println(classificationType + " : " + q + " :: total=" + JSONHelper.getTotalFromSearch(resultObj));
 				classification.setCoverage(classification.getCoverage() + JSONHelper.getTotalFromSearch(resultObj));
 //				Classification.printClassifications(" -1- ");
 				try {
@@ -79,18 +80,19 @@ public class ClassifyHiddenDB {
 			}
 		}
 		Classification.calculateSpecificity();
+		Classification.printClassifications();		// print specificity and coverage for each classification.
 		
-		Classification.printClassifications(" -After "+currentType+"- ");
+//		Classification.printClassifications(" -After "+currentType+"- ");
 		
 		List<String> qualifyingClassifications = Classification.getQualifyingClassificationTypes(this.t_coverage, this.t_specificity);
 		if(qualifyingClassifications == null || qualifyingClassifications.size() <= 0){
-			System.out.println(" Couldnt classify the DB More.");
-			System.out.println(" Current level of classification is " + currentType);
+//			System.out.println(" Couldnt classify the DB More.");
+//			System.out.println(" Current level of classification is " + currentType);
 			this.classificationsForDB.add(currentType);
 		} else {
-			System.out.println(" Going deeper to the next level of classification ");
+//			System.out.println(" Going deeper to the next level of classification ");
 			for(String s : qualifyingClassifications){
-				System.out.println(" DB Classified as --> " + s);
+//				System.out.println(" DB Classified as --> " + s);
 				String nextLevel = s.substring(s.lastIndexOf(':') + 1);
 				try {
 					Map<String, List<String>> queriesForClassificationFurther = QueryHelper.getQueriesForClassification(nextLevel+".txt", s);
@@ -117,11 +119,14 @@ public class ClassifyHiddenDB {
 	
 	
 	public static void printClassificationForDB(ClassifyHiddenDB classifyHiddenDB){
-		System.out.println("---------DATABASE CALSSIFIED AS FOLLOWS---------");
+		System.out.println();
+		System.out.println();
+		System.out.println("Classification: ");
 		for(String s : classifyHiddenDB.classificationsForDB){
-			System.out.println("-> " + s);
+			System.out.println("-> " + s.replace(':', '/'));
 		}
-		System.out.println("---------END DATABASE CALSSIFIED AS FOLLOWS---------");
+		System.out.println();
+		System.out.println();
 	}
 	
 	/**
