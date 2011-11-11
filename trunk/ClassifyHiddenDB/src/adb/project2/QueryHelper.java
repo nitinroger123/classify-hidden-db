@@ -14,7 +14,7 @@ import java.util.Map;
 public class QueryHelper {
 
 	/**
-	 * get the queries from the file name and forms a hashmap as follows <br/>
+	 * get the queries from the file name and forms a hashmap as follows:
 	 *  "type" - list of query Strings for this type. 
 	 * @param filename
 	 * @throws IOException 
