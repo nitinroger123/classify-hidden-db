@@ -17,7 +17,7 @@ public class BingSearch {
 	
 	/* The constants required to build the request*/
 	public static final String sources = "Web";
-	public static final String webCount = "4";
+	public static final String webCount = "10";
 	
 	/**
 	 * Build the requestURL
